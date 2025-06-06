@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(uuid())
+  email             String    @unique
+  password          String
+  name              String
+  role              Role      @default(USER)
+  isActive          Boolean   @default(true)
+  lastLogin         DateTime?
+  loginAttempts     Int       @default(0)
+  lastLoginAttempt  DateTime?
+  passwordChangedAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+  createdBy         String?
+  updatedBy         String?
+  deletedBy         String?
+
+  @@index([email])
+  @@index([isActive])
+}
+
+model Vehicle {
+  id              String           @id @default(uuid())
+  brand           String
+  model           String
+  year            Int
+  licensePlate    String          @unique
+  chassis         String          @unique
+  mileage         Float
+  color           String
+  fuelType        FuelType
+  status          VehicleStatus   @default(AVAILABLE)
+  purchasePrice   Float
+  salePrice       Float?
+  purchaseDate    DateTime
+  saleDate        DateTime?
+  maintenance     Maintenance[]
+  transactions    Transaction[]
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+  createdBy       String?
+  updatedBy       String?
+  deletedBy       String?
+
+  @@index([licensePlate])
+  @@index([chassis])
+  @@index([status])
+  @@index([isActive])
+}
+
+model Client {
+  id              String        @id @default(uuid())
+  name            String
+  email           String        @unique
+  phone           String
+  cpf             String        @unique
+  cnh             String        @unique
+  address         String
+  transactions    Transaction[]
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+  createdBy       String?
+  updatedBy       String?
+  deletedBy       String?
+
+  @@index([email])
+  @@index([cpf])
+  @@index([cnh])
+  @@index([isActive])
+}
+
+model Maintenance {
+  id              String            @id @default(uuid())
+  vehicle         Vehicle           @relation(fields: [vehicleId], references: [id])
+  vehicleId       String
+  description     String
+  cost            Float
+  startDate       DateTime
+  endDate         DateTime?
+  status          MaintenanceStatus @default(PENDING)
+  mechanic        String
+  serviceOrders   ServiceOrder[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model ServiceOrder {
+  id              String    @id @default(uuid())
+  maintenance     Maintenance @relation(fields: [maintenanceId], references: [id])
+  maintenanceId   String
+  description     String
+  cost            Float
+  parts           String[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Contract {
+  id          String   @id @default(uuid())
+  transactionId String
+  fileName    String
+  mimeType    String
+  fileSize    Int
+  fileHash    String
+  fileBuffer  Bytes
+  uploadDate  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+
+  @@index([transactionId])
+}
+
+model Transaction {
+  id              String            @id @default(uuid())
+  vehicle         Vehicle           @relation(fields: [vehicleId], references: [id])
+  vehicleId       String
+  client          Client            @relation(fields: [clientId], references: [id])
+  clientId        String
+  type            TransactionType
+  amount          Float
+  status          PaymentStatus     @default(PENDING)
+  installments    Installment[]
+  contract        Contract?
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  createdBy       String?
+  updatedBy       String?
+  deletedBy       String?
+
+  @@index([vehicleId])
+  @@index([clientId])
+  @@index([status])
+  @@index([isActive])
+}
+
+model Installment {
+  id              String    @id @default(uuid())
+  transaction     Transaction @relation(fields: [transactionId], references: [id])
+  transactionId   String
+  number          Int
+  amount          Float
+  dueDate         DateTime
+  status          PaymentStatus @default(PENDING)
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model AuditLog {
+    id        String   @id @default(uuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    action    String
+    entity    String
+    entityId  String
+    details   Json
+    ipAddress String?
+    timestamp DateTime @default(now())
+
+    @@index([userId])
+    @@index([entity])
+    @@index([entityId])
+    @@index([timestamp])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum FuelType {
+  GASOLINE
+  ETHANOL
+  DIESEL
+  FLEX
+  ELECTRIC
+  HYBRID
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  SOLD
+  RENTED
+  MAINTENANCE
+}
+
+enum MaintenanceStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  SALE
+  RENT
+  PURCHASE
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum ContractStatus {
+  PENDING
+  SIGNED
+  EXPIRED
+  CANCELLED
+} 

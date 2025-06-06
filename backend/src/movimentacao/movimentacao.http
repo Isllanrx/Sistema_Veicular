@@ -1,0 +1,15 @@
+### List movimentacao
+GET Http://localhost:3000/movimentacao
+
+### Get movimentacao
+GET Http://localhost:3000/movimentacao/3
+
+### Create movimentacao
+POST  Http://localhost:3000/movimentacao/
+
+
+### Update movimentacao
+PATCH  Http://localhost:3000/movimentacao/3
+
+### Delete movimentacao
+DELETE  Http://localhost:3000/movimentacao/3

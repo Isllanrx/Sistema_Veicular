@@ -1,0 +1,25 @@
+### List Usuario
+GET Http://localhost:3000/usuario
+
+### Get Usuario
+GET Http://localhost:3000/usuario/3
+
+### Create Usuario
+POST  Http://localhost:3000/usuario/
+Content-Type: application/json
+
+{
+    "nome": "Ramses",
+    "email": "ramses.toso@hotmail.com",
+    "dateofbirth": "2004-07-17",
+    "senha": "teste123"
+}
+### Update Usuario
+PATCH  Http://localhost:3000/usuario/3
+Content-Type: application/json
+
+{
+    "email": "isllan.toso79@gmail.com"
+}
+### Delete Usuario
+DELETE  Http://localhost:3000/usuario/3

@@ -1,0 +1,15 @@
+### List fornecedor
+GET Http://localhost:3000/fornecedor
+
+### Get fornecedor
+GET Http://localhost:3000/fornecedor/3
+
+### Create fornecedor
+POST  Http://localhost:3000/fornecedor/
+
+
+### Update fornecedor
+PATCH  Http://localhost:3000/fornecedor/3
+
+### Delete fornecedor
+DELETE  Http://localhost:3000/fornecedor/3

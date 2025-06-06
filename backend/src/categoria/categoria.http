@@ -1,0 +1,15 @@
+### List categoria
+GET Http://localhost:3000/categoria
+
+### Get categoria
+GET Http://localhost:3000/categoria/3
+
+### Create categoria
+POST  Http://localhost:3000/categoria/
+
+
+### Update categoria
+PATCH  Http://localhost:3000/categoria/3
+
+### Delete categoria
+DELETE  Http://localhost:3000/categoria/3
