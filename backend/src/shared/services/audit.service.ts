@@ -1,13 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CustomLoggerService } from './logger.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class AuditService {
     constructor(
-        private prisma: PrismaService,
-        private logger: CustomLoggerService
+        private readonly prisma: PrismaService,
+        private readonly logger: LoggerService
     ) {}
+
+    async log(userId: string, action: string, entity: string, entityId: string, details: any) {
+        try {
+            return await this.prisma.auditLog.create({
+                data: {
+                    userId,
+                    action,
+                    entity,
+                    entityId,
+                    details,
+                },
+            });
+        } catch (error) {
+            this.logger.error(`Erro ao registrar log de auditoria: ${error.message}`);
+            throw error;
+        }
+    }
 
     async logAction(data: {
         userId: string;

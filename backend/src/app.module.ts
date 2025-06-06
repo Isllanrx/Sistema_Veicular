@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './modules/auth/auth.module';
-import { CategoriesModule } from './modules/categories/categories.module';
-import { ProductsModule } from './modules/products/products.module';
-import { ReportsModule } from './modules/reports/reports.module';
-import { SuppliersModule } from './modules/suppliers/suppliers.module';
-import { TransactionsModule } from './modules/transactions/transactions.module';
-import { UsersModule } from './modules/users/users.module';
-import { VehiclesModule } from './modules/vehicles/vehicles.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { CategoriaModule } from './categoria/categoria.module';
+import { FornecedorModule } from './fornecedor/fornecedor.module';
+import { MovimentacaoModule } from './movimentacao/movimentacao.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ProdutoModule } from './produto/produto.module';
+import { SharedModule } from './shared/shared.module';
+import { UsuarioModule } from './usuario/usuario.module';
+import { VehiclesModule } from './vehicles/vehicles.module';
 
 @Module({
   imports: [
@@ -16,14 +18,16 @@ import { PrismaModule } from './prisma/prisma.module';
       isGlobal: true,
     }),
     PrismaModule,
+    SharedModule,
     AuthModule,
-    UsersModule,
+    UsuarioModule,
     VehiclesModule,
-    CategoriesModule,
-    SuppliersModule,
-    TransactionsModule,
-    ProductsModule,
-    ReportsModule,
+    CategoriaModule,
+    ProdutoModule,
+    FornecedorModule,
+    MovimentacaoModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

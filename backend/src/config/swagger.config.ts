@@ -3,8 +3,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication) {
     const config = new DocumentBuilder()
-        .setTitle('Control Car API')
-        .setDescription('API para sistema de controle de veículos')
+        .setTitle('Controle de Estoque Veicular API')
+        .setDescription('API para sistema de controle de estoque veicular')
         .setVersion('1.0')
         .addTag('auth', 'Endpoints de autenticação')
         .addTag('vehicles', 'Endpoints de veículos')

@@ -1,6 +1,6 @@
-import axios from '../axios';
 import { API_ROUTES } from '../api';
-import { setToken, getToken, removeToken, isAuthenticated } from '../auth';
+import { getToken, isAuthenticated, removeToken, setToken } from '../auth';
+import axios from '../axios';
 
 export interface LoginDto {
   email: string;
@@ -21,14 +21,43 @@ export class AuthService {
         API_ROUTES.auth.login,
         loginDto
       );
+      
+      if (!response.data) {
+        throw new Error('Resposta inválida do servidor');
+      }
+
       if (response.data.token) {
         setToken(response.data.token);
       }
-      return response.data;
+
+      return {
+        statusCode: response.data.statusCode || 200,
+        message: response.data.message || 'Login realizado com sucesso',
+        token: response.data.token
+      };
     } catch (error: any) {
-      return error.response?.data || {
+      console.error('Erro detalhado:', error);
+      
+      if (error.response?.data) {
+        return {
+          statusCode: error.response.status,
+          message: error.response.data.message || 'Erro ao fazer login',
+          token: undefined
+        };
+      }
+
+      if (error.message) {
+        return {
+          statusCode: 500,
+          message: error.message,
+          token: undefined
+        };
+      }
+
+      return {
         statusCode: 500,
-        message: "Erro ao fazer login",
+        message: 'Erro ao fazer login. Tente novamente mais tarde.',
+        token: undefined
       };
     }
   }
@@ -39,14 +68,35 @@ export class AuthService {
         API_ROUTES.usuario.create,
         registerDto
       );
+      
+      if (!response.data) {
+        throw new Error('Resposta inválida do servidor');
+      }
+
       return {
         statusCode: response.data.code || 200,
-        message: response.data.message
+        message: response.data.message || 'Usuário cadastrado com sucesso'
       };
     } catch (error: any) {
-      return error.response?.data || {
+      console.error('Erro detalhado:', error);
+      
+      if (error.response?.data) {
+        return {
+          statusCode: error.response.status,
+          message: error.response.data.message || 'Erro ao cadastrar usuário'
+        };
+      }
+
+      if (error.message) {
+        return {
+          statusCode: 500,
+          message: error.message
+        };
+      }
+
+      return {
         statusCode: 500,
-        message: "Erro ao cadastrar usuário",
+        message: 'Erro ao cadastrar usuário. Tente novamente mais tarde.'
       };
     }
   }

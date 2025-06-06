@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { AuthService } from "@/lib/services/auth.service"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -28,11 +28,11 @@ export default function LoginPage() {
         authService.setToken(response.token)
         toast({
           title: "Sucesso",
-          description: "Login realizado com sucesso",
+          description: response.message || "Login realizado com sucesso",
         })
         router.push("/")
       } else {
-        console.error("Erro no login:", response.message)
+        console.error("Erro no login:", response)
         toast({
           title: "Erro",
           description: response.message || "Erro ao fazer login",
@@ -43,7 +43,7 @@ export default function LoginPage() {
       console.error("Erro ao fazer login:", error)
       toast({
         title: "Erro",
-        description: "Erro ao fazer login",
+        description: error instanceof Error ? error.message : "Erro ao fazer login",
         variant: "destructive",
       })
     } finally {
@@ -56,7 +56,7 @@ export default function LoginPage() {
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Bem-vindo ao Estoquei
+            Bem-vindo ao Controle de Estoque Veicular
           </h1>
           <p className="text-sm text-muted-foreground">
             Entre com suas credenciais para acessar o sistema

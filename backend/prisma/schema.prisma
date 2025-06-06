@@ -27,6 +27,7 @@ model User {
   createdBy         String?
   updatedBy         String?
   deletedBy         String?
+  auditLogs         AuditLog[]
 
   @@index([email])
   @@index([isActive])
@@ -114,7 +115,7 @@ model ServiceOrder {
 
 model Contract {
   id          String   @id @default(uuid())
-  transactionId String
+  transactionId String @unique
   fileName    String
   mimeType    String
   fileSize    Int

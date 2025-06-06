@@ -1,6 +1,6 @@
-# Control Car - Sistema de Gestão de Veículos
+# Controle de Estoque Veicular
 
-Sistema completo para gestão de veículos, incluindo controle de estoque, manutenção, vendas e relatórios.
+Sistema completo para controle de estoque veicular, incluindo gestão de veículos, manutenção, vendas e relatórios.
 
 ## 🚀 Funcionalidades
 
@@ -37,9 +37,9 @@ Sistema completo para gestão de veículos, incluindo controle de estoque, manut
 ## 🛠️ Tecnologias
 
 ### Backend
-- NestJS
-- TypeScript
-- PostgreSQL
+- NestJS 11
+- TypeScript 5.7
+- PostgreSQL 14+
 - Prisma ORM
 - JWT Authentication
 - Swagger/OpenAPI
@@ -48,14 +48,14 @@ Sistema completo para gestão de veículos, incluindo controle de estoque, manut
 - Nodemailer
 
 ### Frontend
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- React Query
-- React Hook Form
+- Next.js 14
+- React 18
+- TypeScript 5.0
+- Tailwind CSS 3.4
+- React Query 5.0
+- React Hook Form 7.50
 - Radix UI
-- Chart.js
+- Chart.js 4.4
 
 ### DevOps
 - Docker
@@ -73,11 +73,33 @@ Sistema completo para gestão de veículos, incluindo controle de estoque, manut
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/Isllanrx/control-car.git
-cd control-car
+git clone https://github.com/Isllanrx/controle-estoque-veicular.git
+cd controle-estoque-veicular
 ```
 
-2. Instale as dependências:
+2. Configure o banco de dados:
+```bash
+# Crie o banco de dados
+psql -U seu_usuario -c "CREATE DATABASE controle_veicular;"
+
+# Execute o script SQL
+psql -U seu_usuario -d controle_veicular -f database.sql
+```
+
+3. Configure as variáveis de ambiente:
+```bash
+# Backend
+cd backend
+cp .env.example .env
+# Edite o arquivo .env com suas configurações
+
+# Frontend
+cd ../frontend
+cp .env.example .env.local
+# Edite o arquivo .env.local com suas configurações
+```
+
+4. Instale as dependências:
 ```bash
 # Backend
 cd backend
@@ -88,24 +110,14 @@ cd ../frontend
 pnpm install
 ```
 
-3. Configure as variáveis de ambiente:
-```bash
-# Backend
-cp .env.example .env
-# Edite o arquivo .env com suas configurações
-
-# Frontend
-cp .env.example .env.local
-# Edite o arquivo .env.local com suas configurações
-```
-
-4. Execute as migrações do banco de dados:
+5. Execute as migrações do banco de dados:
 ```bash
 cd backend
+pnpm prisma generate
 pnpm prisma migrate dev
 ```
 
-5. Inicie os serviços:
+6. Inicie os serviços:
 ```bash
 # Backend
 cd backend

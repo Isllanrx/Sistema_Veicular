@@ -1,15 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
-import * as bcrypt from 'bcrypt';
+import { Usuario as UsuarioInterface } from './interfaces/usuario.interface';
 
 @Injectable()
 export class UsuarioService {
   constructor(
     @Inject('USUARIO_REPOSITORY')
     private usuarioRepository: Repository<Usuario>,
+    private prisma: PrismaService
   ) {}
 
   
@@ -48,8 +51,11 @@ export class UsuarioService {
     );
   }
 
-  async findByEmail(paramEmail: string) {
-    return await this.usuarioRepository.findOne({where:{email: paramEmail}});
+  async findByEmail(email: string): Promise<UsuarioInterface | null> {
+    const usuario = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    return usuario as UsuarioInterface;
   }
 
   async findOne(id:number) {
@@ -80,5 +86,15 @@ export class UsuarioService {
 
   remove(id: number) {
     return `This action removes a #${id} usuario`;
+  }
+
+  async resetLoginAttempts(id: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        loginAttempts: 0,
+        lastLoginAttempt: new Date(),
+      },
+    });
   }
 }
